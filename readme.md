@@ -1,0 +1,1 @@
+Este é um repositório dedicado ao meu aprendizado de React Native. O objetivo é construir um app simples para entender melhor o ecossistema mobile.
