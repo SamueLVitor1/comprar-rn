@@ -16,7 +16,19 @@ import { Item } from "@/components/Item";
 import { FilterStatus } from "@/types/FilterStatus";
 
 const FILTER_STATUS: FilterStatus[] = [FilterStatus.PENDING, FilterStatus.DONE];
-const ITEMS = Array.from({ length: 100 }).map((_, index) => String(index));
+const ITEMS = [
+  {
+    id: "1",
+    status: FilterStatus.DONE,
+    description: "Comprar um pacote de café",
+  },
+  { id: "2", status: FilterStatus.PENDING, description: "Lavar Carro" },
+  {
+    id: "3",
+    status: FilterStatus.PENDING,
+    description: "Estudar React Native",
+  },
+];
 
 export function Home() {
   return (
@@ -55,17 +67,18 @@ export function Home() {
 
         <FlatList
           data={ITEMS}
-          keyExtractor={(item) => item}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <Item
-              data={{
-                status: FilterStatus.PENDING,
-                description: `Café ${item}`,
-              }}
+              data={item}
               onRemove={() => console.log("remover")}
               onStatus={() => console.log("mudar status")}
             />
           )}
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          contentContainerStyle={styles.listContent}
+          ListEmptyComponent={() => <Text style={styles.empty}>Nenhum item aqui.</Text>}
         />
       </View>
     </View>

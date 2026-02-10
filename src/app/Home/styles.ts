@@ -45,9 +45,28 @@ export const styles = StyleSheet.create({
   clearButton: {
     marginLeft: "auto",
   },
+
   clearButtonText: {
     fontSize: 12,
     color: '#828282',
     fontWeight: 600
   },
+
+  separator: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "#eef0f5",
+    marginVertical: 16
+  },
+
+  listContent: {
+    paddingTop: 24,
+    paddingBottom: 62
+  },
+
+  empty: {
+    fontSize: 14,
+    color: "#808080",
+    textAlign: "center"
+  }
 });
