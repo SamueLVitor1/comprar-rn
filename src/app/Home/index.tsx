@@ -1,4 +1,11 @@
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { styles } from "./styles";
 
 import { Button } from "@/components/Button";
@@ -9,6 +16,7 @@ import { Item } from "@/components/Item";
 import { FilterStatus } from "@/types/FilterStatus";
 
 const FILTER_STATUS: FilterStatus[] = [FilterStatus.PENDING, FilterStatus.DONE];
+const ITEMS = Array.from({ length: 100 }).map((_, index) => String(index));
 
 export function Home() {
   return (
@@ -31,21 +39,34 @@ export function Home() {
           </TouchableOpacity>
         </View>
 
-        <ScrollView>
-          {Array.from({ length: 100 }).map((_, index) => {
-            return (
-              <Item
-                key={index}
-                data={{
-                  status: FilterStatus.PENDING,
-                  description: `Café ${index}`,
-                }}
-                onRemove={() => console.log("remover")}
-                onStatus={() => console.log("mudar status")}
-              />
-            );
-          })}
-        </ScrollView>
+        {/* {ITEMS.map((value) => {
+          return (
+            <Item
+              key={value}
+              data={{
+                status: FilterStatus.PENDING,
+                description: `Café ${value}`,
+              }}
+              onRemove={() => console.log("remover")}
+              onStatus={() => console.log("mudar status")}
+            />
+          );
+        })} */}
+
+        <FlatList
+          data={ITEMS}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => (
+            <Item
+              data={{
+                status: FilterStatus.PENDING,
+                description: `Café ${item}`,
+              }}
+              onRemove={() => console.log("remover")}
+              onStatus={() => console.log("mudar status")}
+            />
+          )}
+        />
       </View>
     </View>
   );
