@@ -36,13 +36,13 @@ export function Home() {
     };
 
     await itemsStorage.add(newItem);
-    await getItems();
+    await itemsByStatus();
     setDescription("");
   }
 
-  async function getItems() {
+  async function itemsByStatus() {
     try {
-      const response = await itemsStorage.get();
+      const response = await itemsStorage.getByStatus(filter);
       setItems(response);
     } catch (error) {
       console.log(error)
@@ -51,8 +51,8 @@ export function Home() {
   }
 
   useEffect(()=> {
-    getItems()
-  }, [])
+    itemsByStatus()
+  }, [filter])
 
   return (
     <View style={styles.container}>
