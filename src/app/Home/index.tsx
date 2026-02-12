@@ -37,11 +37,21 @@ export function Home() {
 
     await itemsStorage.add(newItem);
     await itemsByStatus();
-    
+
     setDescription("");
     setFilter(FilterStatus.PENDING);
 
     Alert.alert("Adicionado", `Adicionado ${description}`)
+  }
+
+  async function handleRemove(id: string) {
+    try {
+      await itemsStorage.remove(id);
+      await itemsByStatus();
+    } catch (error) {
+      console.log(error)
+      Alert.alert("Erro", "Não foi possível remover o item.");
+    }
   }
 
   async function itemsByStatus() {
@@ -93,7 +103,7 @@ export function Home() {
           renderItem={({ item }) => (
             <Item
               data={item}
-              onRemove={() => console.log("remover")}
+              onRemove={() => handleRemove(item.id)}
               onStatus={() => console.log("mudar status")}
             />
           )}
