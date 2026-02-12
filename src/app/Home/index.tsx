@@ -37,7 +37,11 @@ export function Home() {
 
     await itemsStorage.add(newItem);
     await itemsByStatus();
+    
     setDescription("");
+    setFilter(FilterStatus.PENDING);
+
+    Alert.alert("Adicionado", `Adicionado ${description}`)
   }
 
   async function itemsByStatus() {
