@@ -2,7 +2,6 @@ import {
   Alert,
   FlatList,
   Image,
-  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -15,16 +14,17 @@ import { Filter } from "@/components/Filter";
 import { Item } from "@/components/Item";
 
 import { FilterStatus } from "@/types/FilterStatus";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { itemsStorage, ItemStorage } from "@/storage/itemsStorage";
 
 const FILTER_STATUS: FilterStatus[] = [FilterStatus.PENDING, FilterStatus.DONE];
 
 export function Home() {
   const [filter, setFilter] = useState(FilterStatus.PENDING);
   const [description, setDescription] = useState("");
-  const [items, setItems] = useState<any>([]);
+  const [items, setItems] = useState<ItemStorage[]>([]);
 
-  function handleAdd() {
+  async function handleAdd() {
     if (!description.trim()) {
       return Alert.alert("Adicionar", "Informe a descrição do item.");
     }
@@ -35,9 +35,24 @@ export function Home() {
       status: FilterStatus.PENDING,
     };
 
-    setItems((prevItems: any) => [...prevItems, newItem]);
+    await itemsStorage.add(newItem);
+    await getItems();
     setDescription("");
   }
+
+  async function getItems() {
+    try {
+      const response = await itemsStorage.get();
+      setItems(response);
+    } catch (error) {
+      console.log(error)
+      Alert.alert("Erro", "Não foi possível carregar os itens.");
+    }
+  }
+
+  useEffect(()=> {
+    getItems()
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -67,20 +82,6 @@ export function Home() {
             <Text style={styles.clearButtonText}>Limpar</Text>
           </TouchableOpacity>
         </View>
-
-        {/* {ITEMS.map((value) => {
-          return (
-            <Item
-              key={value}
-              data={{
-                status: FilterStatus.PENDING,
-                description: `Café ${value}`,
-              }}
-              onRemove={() => console.log("remover")}
-              onStatus={() => console.log("mudar status")}
-            />
-          );
-        })} */}
 
         <FlatList
           data={items}
