@@ -41,7 +41,7 @@ export function Home() {
     setDescription("");
     setFilter(FilterStatus.PENDING);
 
-    Alert.alert("Adicionado", `Adicionado ${description}`)
+    Alert.alert("Adicionado", `Adicionado ${description}`);
   }
 
   async function handleRemove(id: string) {
@@ -49,7 +49,7 @@ export function Home() {
       await itemsStorage.remove(id);
       await itemsByStatus();
     } catch (error) {
-      console.log(error)
+      console.log(error);
       Alert.alert("Erro", "Não foi possível remover o item.");
     }
   }
@@ -59,14 +59,41 @@ export function Home() {
       const response = await itemsStorage.getByStatus(filter);
       setItems(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       Alert.alert("Erro", "Não foi possível carregar os itens.");
     }
   }
 
-  useEffect(()=> {
-    itemsByStatus()
-  }, [filter])
+  function handleClear() {
+    Alert.alert("Limpar", "Tem certeza que deseja limpar a lista?", [
+      { text: "Não", style: "cancel" },
+      { text: "Sim",  onPress: () => onClear()},
+    ]);
+  }
+
+  async function onClear() {
+    try {
+      await itemsStorage.clear();
+      setItems([]);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Erro", "Não foi possível limpar os itens.");
+    }
+  }
+
+  async function handleToggleStatus(id: string) {
+    try {
+      await itemsStorage.toggleStatus(id);
+      await itemsByStatus();
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Erro", "Não foi possível atualizar o status do item.");
+    }
+  }
+
+  useEffect(() => {
+    itemsByStatus();
+  }, [filter]);
 
   return (
     <View style={styles.container}>
@@ -92,7 +119,7 @@ export function Home() {
             />
           ))}
 
-          <TouchableOpacity style={styles.clearButton}>
+          <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
             <Text style={styles.clearButtonText}>Limpar</Text>
           </TouchableOpacity>
         </View>
@@ -104,7 +131,7 @@ export function Home() {
             <Item
               data={item}
               onRemove={() => handleRemove(item.id)}
-              onStatus={() => console.log("mudar status")}
+              onStatus={() => handleToggleStatus(item.id)}
             />
           )}
           showsVerticalScrollIndicator={false}
